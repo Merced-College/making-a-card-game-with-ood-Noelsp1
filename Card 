@@ -1,0 +1,124 @@
+// Group- Noel Sandoval, Sara Filipinas, Marco Gallegos 
+
+// Card class representing each card in the deck
+public class Card {
+    private int value;  // Card's numeric value (2-10, face cards are 10, Ace can be 1 or 11)
+    private String suit;  // Card's suit (Hearts, Diamonds, Clubs, Spades)
+    private String rank;  // Card's rank (2-10, Jack, Queen, King, Ace)
+
+    // Constructor to initialize the card with its value, suit, and rank
+    public Card(int value, String suit, String rank) {
+        this.value = value;
+        this.suit = suit;
+        this.rank = rank;
+    }
+
+    // Accessor (getter) for the card's value
+    public int getValue() {
+        return value;
+    }
+
+    // Mutator (setter) for the card's value (optional, not used in this context)
+    public void setValue(int value) {
+        this.value = value;
+    }
+
+    // Accessor (getter) for the card's suit
+    public String getSuit() {
+        return suit;
+    }
+
+    // Mutator (setter) for the card's suit (optional)
+    public void setSuit(String suit) {
+        this.suit = suit;
+    }
+
+    // Accessor (getter) for the card's rank
+    public String getRank() {
+        return rank;
+    }
+
+    // Mutator (setter) for the card's rank (optional)
+    public void setRank(String rank) {
+        this.rank = rank;
+    }
+
+    // toString method to return a readable description of the card
+    @Override
+    public String toString() {
+        return rank + " of " + suit;
+    }
+}
+
+// Adding a new feature to display the player's and dealer's hands in more detail
+import java.util.ArrayList;
+
+public class BlackJack {
+
+    private static Card[] cards = new Card[52];
+    private static int currentCardIndex = 0;
+
+    public static void main(String[] args) {
+        ArrayList<Card> playerHand = new ArrayList<>();  // Store player's cards
+        ArrayList<Card> dealerHand = new ArrayList<>();  // Store dealer's cards
+
+        //M
+
+        initializeDeck();
+        shuffleDeck();
+
+        // Player's initial hand
+        playerHand.add(dealCard());
+        playerHand.add(dealCard());
+        displayHand("Player", playerHand);
+
+        // Dealer's initial hand
+        dealerHand.add(dealCard());
+        dealerHand.add(dealCard());
+        displayHand("Dealer", dealerHand);
+
+        // Continue game logic...
+    }
+
+    // Display all cards in a hand
+    public static void displayHand(String who, ArrayList<Card> hand) {
+        System.out.println(who + "'s hand:");
+        for (Card card : hand) {
+            System.out.println(card);  // toString() is called automatically
+        }
+        System.out.println();  // Blank line after the hand
+    }
+
+    // Initialize the deck of cards
+    private static void initializeDeck() {
+        String[] SUITS = { "Hearts", "Diamonds", "Clubs", "Spades" };
+        String[] RANKS = { "2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen", "King", "Ace" };
+
+        int rankIndex = 0;
+        for (int i = 0; i < cards.length; i++) {
+            int value = 10;  // Default value for face cards (Jack, Queen, King, Ace)
+            if (rankIndex < 9) value = Integer.parseInt(RANKS[rankIndex]);  // Set values for 2-10
+
+            cards[i] = new Card(value, SUITS[i % 4], RANKS[rankIndex]);
+
+            // Move to the next rank every 4 cards (one per suit)
+            if (i % 4 == 3) rankIndex++;
+        }
+    }
+
+    // Shuffle the deck
+    private static void shuffleDeck() {
+        Random random = new Random();
+        for (int i = 0; i < cards.length; i++) {
+            int randomIndex = random.nextInt(cards.length);
+            Card temp = cards[i];
+            cards[i] = cards[randomIndex];
+            cards[randomIndex] = temp;
+        }
+    }
+
+    // Deal the next card from the deck
+    private static Card dealCard() {
+        return cards[currentCardIndex++];
+    }
+}
